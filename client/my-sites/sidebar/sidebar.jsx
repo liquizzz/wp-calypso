@@ -32,7 +32,6 @@ import { getCurrentUser } from 'state/current-user/selectors';
 import { getSelectedSiteId } from 'state/ui/selectors';
 import { setNextLayoutFocus, setLayoutFocus } from 'state/ui/layout-focus/actions';
 import canCurrentUser from 'state/selectors/can-current-user';
-import canCurrentUserManagePlugins from 'state/selectors/can-current-user-manage-plugins';
 import getPrimarySiteId from 'state/selectors/get-primary-site-id';
 import hasJetpackSites from 'state/selectors/has-jetpack-sites';
 import hasSitePendingAutomatedTransfer from 'state/selectors/has-site-pending-automated-transfer';
@@ -244,50 +243,6 @@ export class MySitesSidebar extends Component {
 			);
 		};
 	};
-
-	trackPluginsClick = () => {
-		this.trackMenuItemClick( 'plugins' );
-		this.onNavigate();
-	};
-
-	plugins() {
-		const pluginsLink = '/plugins' + this.props.siteSuffix;
-		const managePluginsLink = '/plugins/manage' + this.props.siteSuffix;
-
-		// checks for manage plugins capability across all sites
-		if ( ! this.props.canManagePlugins ) {
-			return null;
-		}
-
-		// if selectedSite and cannot manage, skip plugins section
-		if ( this.props.siteId && ! this.props.canUserManageOptions ) {
-			return null;
-		}
-
-		const manageButton =
-			this.props.isJetpack || ( ! this.props.siteId && this.props.hasJetpackSites ) ? (
-				<SidebarButton
-					onClick={ this.trackSidebarButtonClick( 'manage_plugins' ) }
-					href={ managePluginsLink }
-				>
-					{ this.props.translate( 'Manage' ) }
-				</SidebarButton>
-			) : null;
-
-		return (
-			<SidebarItem
-				label={ this.props.translate( 'Plugins' ) }
-				selected={ itemLinkMatches( [ '/extensions', '/plugins' ], this.props.path ) }
-				link={ pluginsLink }
-				onNavigate={ this.trackPluginsClick }
-				icon="plugins"
-				preloadSectionName="plugins"
-				tipTarget="plugins"
-			>
-				{ manageButton }
-			</SidebarItem>
-		);
-	}
 
 	trackDomainsClick = () => {
 		this.trackMenuItemClick( 'domains' );
@@ -630,11 +585,7 @@ export class MySitesSidebar extends Component {
 
 		const manage = !! this.manage(),
 			configuration =
-				!! this.sharing() ||
-				!! this.users() ||
-				!! this.siteSettings() ||
-				!! this.plugins() ||
-				!! this.upgrades();
+				!! this.sharing() || !! this.users() || !! this.siteSettings() || !! this.upgrades();
 
 		return (
 			<div>
@@ -668,7 +619,6 @@ export class MySitesSidebar extends Component {
 							{ this.ads() }
 							{ this.sharing() }
 							{ this.users() }
-							{ this.plugins() }
 							{ this.upgrades() }
 							{ this.siteSettings() }
 							{ this.wpAdmin() }
@@ -710,7 +660,6 @@ function mapStateToProps( state ) {
 	const hasSitePendingAT = hasSitePendingAutomatedTransfer( state, siteId );
 
 	return {
-		canManagePlugins: canCurrentUserManagePlugins( state ),
 		canUserEditThemeOptions: canCurrentUser( state, siteId, 'edit_theme_options' ),
 		canUserListUsers: canCurrentUser( state, siteId, 'list_users' ),
 		canUserManageOptions: canCurrentUser( state, siteId, 'manage_options' ),
