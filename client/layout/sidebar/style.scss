@@ -425,8 +425,9 @@ form.sidebar__button input {
 }
 
 .sidebar__chevron-right {
-	position: absolute;
-	right: 0;
+	position: relative;
+	width: 36px;
+	height: 46px;
 	pointer-events: none;
 
 	.gridicon {
