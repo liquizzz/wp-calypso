@@ -35,6 +35,7 @@ import areAllSitesSingleUser from 'state/selectors/are-all-sites-single-user';
 import canCurrentUser from 'state/selectors/can-current-user';
 import { itemLinkMatches } from './utils';
 import { recordTracksEvent } from 'state/analytics/actions';
+import { abtest } from 'lib/abtest';
 
 class ManageMenu extends PureComponent {
 	static propTypes = {
@@ -73,7 +74,7 @@ class ManageMenu extends PureComponent {
 
 	getDefaultMenuItems() {
 		const { isAtomic, siteSlug, translate } = this.props;
-
+		const isTestingCalypsoify = abtest( 'calypsoifyPlugins' ) === 'pointToWPAdmin';
 		const items = [
 			{
 				name: 'page',
@@ -124,17 +125,17 @@ class ManageMenu extends PureComponent {
 				name: 'plugins',
 				label: translate( 'Plugins' ),
 				capability: 'manage_options',
-				queryable: ! isAtomic,
+				queryable: ! ( isAtomic && isTestingCalypsoify ),
 				config: 'manage/plugins',
 				link: '/plugins',
-				absoluteLink: true,
+				absoluteLink: isTestingCalypsoify,
 				paths: [ '/extensions', '/plugins' ],
 				wpAdminLink: 'plugin-install.php?calypsoify=1',
 				showOnAllMySites: true,
-				buttonLink: ! isAtomic ? '/plugins/manage' : '',
+				buttonLink: isAtomic && ! isTestingCalypsoify ? `/plugins/manage/${ siteSlug }` : '',
 				buttonText: translate( 'Manage' ),
-				extraIcon: isAtomic ? 'chevron-right' : null,
-				customClassName: isAtomic ? 'sidebar__plugins-item' : '',
+				extraIcon: isAtomic && isTestingCalypsoify ? 'chevron-right' : null,
+				customClassName: isAtomic && isTestingCalypsoify ? 'sidebar__plugins-item' : '',
 				forceInternalLink: isAtomic,
 				order: 100,
 			},

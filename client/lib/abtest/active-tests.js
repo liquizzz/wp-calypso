@@ -110,4 +110,12 @@ export default {
 		},
 		defaultVariation: 'control',
 	},
+	calypsoifyPlugins: {
+		datestamp: '20180704',
+		variations: {
+			pointToWPAdmin: 30,
+			original: 70,
+		},
+		defaultVariation: 'pointToWPAdmin',
+	},
 };
