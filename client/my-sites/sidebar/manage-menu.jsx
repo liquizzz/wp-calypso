@@ -7,7 +7,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { compact, includes, omit, reduce, get } from 'lodash';
+import { compact, includes, omit, reduce, get, orderBy, map } from 'lodash';
 import { localize } from 'i18n-calypso';
 import Gridicon from 'gridicons';
 
@@ -136,6 +136,7 @@ class ManageMenu extends PureComponent {
 				extraIcon: isAtomic ? 'chevron-right' : null,
 				customClassName: isAtomic ? 'sidebar__plugins-item' : '',
 				forceInternalLink: isAtomic,
+				order: 100,
 			},
 		];
 
@@ -307,7 +308,13 @@ class ManageMenu extends PureComponent {
 	}
 
 	render() {
-		const menuItems = [ ...this.getDefaultMenuItems(), ...this.getCustomMenuItems() ];
+		const menuItems = orderBy(
+			map(
+				[ ...this.getDefaultMenuItems(), ...this.getCustomMenuItems() ],
+				item => ( ! item.order ? { ...item, order: 0 } : item )
+			),
+			'order'
+		);
 
 		return (
 			<ul>
