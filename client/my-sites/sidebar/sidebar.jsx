@@ -102,6 +102,7 @@ export class MySitesSidebar extends Component {
 			<ManageMenu
 				siteId={ this.props.siteId }
 				path={ this.props.path }
+				isAtomic={ this.props.isAtomic }
 				onNavigate={ this.onNavigate }
 			/>
 		);

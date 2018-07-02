@@ -9,6 +9,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { compact, includes, omit, reduce, get } from 'lodash';
 import { localize } from 'i18n-calypso';
+import Gridicon from 'gridicons';
 
 /**
  * Internal dependencies
@@ -71,12 +72,12 @@ class ManageMenu extends PureComponent {
 	}
 
 	getDefaultMenuItems() {
-		const { siteSlug } = this.props;
+		const { isAtomic, siteSlug, translate } = this.props;
 
 		const items = [
 			{
 				name: 'page',
-				label: this.props.translate( 'Site Pages' ),
+				label: translate( 'Site Pages' ),
 				capability: 'edit_pages',
 				queryable: true,
 				config: 'manage/pages',
@@ -87,7 +88,7 @@ class ManageMenu extends PureComponent {
 			},
 			{
 				name: 'post',
-				label: this.props.translate( 'Blog Posts' ),
+				label: translate( 'Blog Posts' ),
 				capability: 'edit_posts',
 				config: 'manage/posts',
 				queryable: true,
@@ -99,7 +100,7 @@ class ManageMenu extends PureComponent {
 			},
 			{
 				name: 'media',
-				label: this.props.translate( 'Media' ),
+				label: translate( 'Media' ),
 				capability: 'upload_files',
 				queryable: true,
 				config: 'manage/media',
@@ -110,7 +111,7 @@ class ManageMenu extends PureComponent {
 			},
 			{
 				name: 'comments',
-				label: this.props.translate( 'Comments' ),
+				label: translate( 'Comments' ),
 				capability: 'edit_posts',
 				queryable: true,
 				config: 'manage/comments',
@@ -118,6 +119,23 @@ class ManageMenu extends PureComponent {
 				paths: [ '/comment', '/comments' ],
 				wpAdminLink: 'edit-comments.php',
 				showOnAllMySites: false,
+			},
+			{
+				name: 'plugins',
+				label: translate( 'Plugins' ),
+				capability: 'manage_options',
+				queryable: ! isAtomic,
+				config: 'manage/plugins',
+				link: '/plugins',
+				absoluteLink: true,
+				paths: [ '/extensions', '/plugins' ],
+				wpAdminLink: 'plugin-install.php?calypsoify=1',
+				showOnAllMySites: true,
+				buttonLink: ! isAtomic ? '/plugins/manage' : '',
+				buttonText: translate( 'Manage' ),
+				extraIcon: isAtomic ? 'chevron-right' : null,
+				customClassName: isAtomic ? 'sidebar__plugins-item' : '',
+				forceInternalLink: isAtomic,
 			},
 		];
 
@@ -156,6 +174,8 @@ class ManageMenu extends PureComponent {
 		let link;
 		if ( ( ! isEnabled || ! menuItem.queryable ) && siteAdminUrl ) {
 			link = siteAdminUrl + menuItem.wpAdminLink;
+		} else if ( menuItem.absoluteLink ) {
+			link = menuItem.link;
 		} else {
 			link = compact( [ menuItem.link, this.props.siteSlug ] ).join( '/' );
 		}
@@ -189,12 +209,22 @@ class ManageMenu extends PureComponent {
 			case 'comments':
 				icon = 'chat';
 				break;
+			case 'plugins':
+				icon = 'plugins';
+				break;
 			default:
 				icon = 'custom-post-type';
 		}
 
+		const extraIcon = menuItem.extraIcon && (
+			<div className={ `manage_menu__${ menuItem.name }-extra-icon` }>
+				<Gridicon icon={ menuItem.extraIcon } />
+			</div>
+		);
+
 		return (
 			<SidebarItem
+				className={ menuItem.customClassName }
 				key={ menuItem.name }
 				label={ menuItem.label }
 				selected={ itemLinkMatches( menuItem.paths || menuItem.link, this.props.path ) }
@@ -202,8 +232,9 @@ class ManageMenu extends PureComponent {
 				onNavigate={ this.onNavigate( menuItem.name ) }
 				icon={ icon }
 				preloadSectionName={ preload }
-				postType={ menuItem.name }
+				postType={ menuItem.name === 'plugins' ? null : menuItem.name }
 				tipTarget={ `side-menu-${ menuItem.name }` }
+				forceInternalLink={ menuItem.forceInternalLink }
 			>
 				{ menuItem.name === 'media' && (
 					<MediaLibraryUploadButton
@@ -221,9 +252,10 @@ class ManageMenu extends PureComponent {
 						href={ menuItem.buttonLink }
 						preloadSectionName="post-editor"
 					>
-						{ this.props.translate( 'Add' ) }
+						{ menuItem.buttonText || this.props.translate( 'Add' ) }
 					</SidebarButton>
 				) }
+				{ extraIcon }
 			</SidebarItem>
 		);
 	}

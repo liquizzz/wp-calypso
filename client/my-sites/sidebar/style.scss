@@ -27,3 +27,18 @@
 .sidebar__menu-link-secondary-text {
 	top: 13px;
 }
+
+.manage_menu__plugins-extra-icon {
+	position: relative;
+	width: 36px;
+	height: 46px;
+	pointer-events: none;
+
+	.gridicon {
+		padding-top: 10px;
+	}
+
+	:hover + & .gridicon {
+		fill: $blue-medium;
+	}
+}
