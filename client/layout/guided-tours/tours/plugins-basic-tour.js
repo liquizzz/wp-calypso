@@ -14,6 +14,7 @@ import { makeTour, Tour, Step } from 'layout/guided-tours/config-elements';
 import { isNewUser, isEnabled } from 'state/ui/guided-tours/contexts';
 import { isDesktop } from 'lib/viewport';
 import { getSelectedSite } from 'state/ui/selectors';
+import { abtest } from 'lib/abtest';
 import isSiteAutomatedTransfer from 'state/selectors/is-site-automated-transfer';
 
 const isAtomic = state => {
@@ -30,7 +31,13 @@ export const PluginsBasicTour = makeTour(
 		name="pluginsBasicTour"
 		version="20180628"
 		path="/plugins/"
-		when={ and( isAtomic, isDesktop, isNewUser, isEnabled( 'guided-tours/plugins-basic-tour' ) ) }
+		when={ and(
+			isAtomic,
+			isNewUser,
+			isDesktop,
+			isEnabled( 'guided-tours/plugins-basic-tour' ),
+			abtest( 'calypsoifyPlugins' ) === 'pointToWPAdmin'
+		) }
 	>
 		<Step
 			name="init"
