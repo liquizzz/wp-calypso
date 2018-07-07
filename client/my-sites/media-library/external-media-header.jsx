@@ -21,6 +21,7 @@ import MediaActions from 'lib/media/actions';
 import MediaListStore from 'lib/media/list-store';
 import StickyPanel from 'components/sticky-panel';
 import MediaFolderDropdown from './media-folder-dropdown';
+import MediaFolderData from 'components/data/media-folder-data';
 
 const DEBOUNCE_TIME = 250;
 
@@ -194,12 +195,17 @@ class MediaLibraryExternalHeader extends React.Component {
 
 				{ config.isEnabled( 'external-media/google-photos/folder-dropdown' ) &&
 					hasFolders && (
-						<MediaFolderDropdown
-							className="media-library__header-item"
-							disabled={ this.state.fetching }
-							onFolderChange={ this.props.onFolderChange }
-							initialSelected={ this.props.folder }
-							folders={ this.props.folders }
+						<MediaFolderData
+							siteId={ this.props.site.ID }
+							render={ props => (
+								<MediaFolderDropdown
+									className="media-library__header-item"
+									disabled={ this.state.fetching }
+									onFolderChange={ this.props.onFolderChange }
+									initialSelected={ this.props.folder }
+									{ ...props }
+								/>
+							) }
 						/>
 					) }
 
