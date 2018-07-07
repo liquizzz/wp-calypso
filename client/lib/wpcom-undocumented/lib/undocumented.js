@@ -2433,36 +2433,6 @@ Undocumented.prototype.externalMediaList = function( query, fn ) {
 };
 
 /**
- * Returns a list of folders from an external media service (eg: Google Photos).
- * TODO: this is currently a stub which returns fixture data. It needs to be converted
- * into an actual WPCom API call to get the folders from the external media API
- */
-Undocumented.prototype.externalMediaFolders = function( query, fn ) {
-	const error = null;
-	const data = {
-		folders: [
-			{
-				ID: 1000,
-				title: 'Album 1',
-				summary: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-				thumbnail: 'http://example.files.wordpress.com/2015/05/g1000.gif',
-				numphotos: 278,
-				date: '2017-05-01',
-			},
-			{
-				ID: 1001,
-				title: 'Album 2',
-				summary: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-				thumbnail: 'http://example.files.wordpress.com/2015/05/g1000.gif',
-				numphotos: 23,
-				date: '2012-09-04',
-			},
-		],
-	};
-	return fn( error, data );
-};
-
-/**
  * Fetch the status of an Automated Transfer.
  *
  * @param {int} siteId -- the ID of the site being transferred

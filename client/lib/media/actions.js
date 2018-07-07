@@ -19,7 +19,7 @@ import { createTransientMedia } from './utils';
 import MediaStore from './store';
 import MediaListStore from './list-store';
 import MediaValidationStore from './validation-store';
-import MediaFolderStore from './folder-store';
+
 /**
  * Module variables
  */
@@ -97,27 +97,6 @@ MediaActions.fetchNextPage = function( siteId ) {
 	} else {
 		wpcom.undocumented().externalMediaList( query, mediaReceived );
 	}
-};
-
-MediaActions.fetchFolders = function( siteId ) {
-	Dispatcher.handleViewAction( {
-		type: 'FETCH_MEDIA_FOLDERS',
-		siteId: siteId,
-	} );
-
-	const query = MediaFolderStore.getQuery( siteId );
-
-	debug( 'Fetching Folders for %d using query %o', siteId, query );
-
-	wpcom.undocumented().externalMediaFolders( query, ( error, data ) => {
-		Dispatcher.handleServerAction( {
-			type: 'RECEIVE_MEDIA_FOLDERS',
-			error: error,
-			siteId: siteId,
-			data: data,
-			query: query,
-		} );
-	} );
 };
 
 const getExternalUploader = service => ( file, siteId ) => {
