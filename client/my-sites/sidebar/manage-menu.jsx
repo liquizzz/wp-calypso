@@ -128,7 +128,6 @@ class ManageMenu extends PureComponent {
 				queryable: ! ( isAtomic && isTestingCalypsoify ),
 				config: 'manage/plugins',
 				link: '/plugins',
-				absoluteLink: isTestingCalypsoify,
 				paths: [ '/extensions', '/plugins' ],
 				wpAdminLink: 'plugin-install.php?calypsoify=1',
 				showOnAllMySites: true,
@@ -176,8 +175,6 @@ class ManageMenu extends PureComponent {
 		let link;
 		if ( ( ! isEnabled || ! menuItem.queryable ) && siteAdminUrl ) {
 			link = siteAdminUrl + menuItem.wpAdminLink;
-		} else if ( menuItem.absoluteLink ) {
-			link = menuItem.link;
 		} else {
 			link = compact( [ menuItem.link, this.props.siteSlug ] ).join( '/' );
 		}
