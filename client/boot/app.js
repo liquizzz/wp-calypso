@@ -45,3 +45,14 @@ window.AppBoot = () => {
 		user.once( 'change', () => boot( user ) );
 	}
 };
+
+//TODO Gutenberg assumes globals, remove this later. Is there an init happening elsewhere?
+window.userSettings = {
+	uid: 'temporary',
+};
+window.wpApiSettings = {
+	schema: {
+		routes: {},
+	},
+};
+window.wp = {};
