@@ -35,5 +35,3 @@ const config = {
 const compiler = webpack( config );
 
 compiler.run( ( error, stats ) => console.log( stats.toString() ) );
-
-eval( `window['blocks-hello-dolly'].init( wp );` );
