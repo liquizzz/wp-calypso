@@ -37,6 +37,7 @@ import getPrimarySiteId from 'state/selectors/get-primary-site-id';
 import getSiteId from 'state/selectors/get-site-id';
 import getSites from 'state/selectors/get-sites';
 import isDomainOnlySite from 'state/selectors/is-domain-only-site';
+import isSiteAutomatedTransfer from 'state/selectors/is-site-automated-transfer';
 import {
 	domainManagementAddGoogleApps,
 	domainManagementContactsPrivacy,
@@ -375,6 +376,15 @@ export function siteSelection( context, next ) {
 
 	const siteId = getSiteId( getState(), siteFragment );
 	if ( siteId ) {
+		const isAtomicSite = isSiteAutomatedTransfer( getState(), siteId );
+		if ( isAtomicSite && /^\/plugins/.test( basePath ) ) {
+			if ( siteFragment ) {
+				return page.redirect( '/stats/day/' + siteFragment );
+			}
+
+			return page.redirect( allSitesPath );
+		}
+
 		dispatch( setSelectedSiteId( siteId ) );
 		const selectionComplete = onSelectedSiteAvailable( context );
 
