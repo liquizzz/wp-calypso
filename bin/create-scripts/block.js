@@ -6,28 +6,51 @@ const __rootDir = path.resolve( __dirname, '../../' );
 const entryPath = path.resolve( process.argv[ 2 ] );
 const sourceDir = path.dirname( entryPath );
 const outputDir = path.join( sourceDir, 'build' );
+const blockName = path.basename( path.dirname( entryPath ) );
 
 const baseConfig = require( path.join( __rootDir, 'webpack.config.js' ) );
 
 const config = {
 	...baseConfig,
 	...{
-		mode: 'production',
+		mode: 'development',
+		devtool: 'inline-sourcemap',
 		entry: entryPath,
 		externals: {
 			...baseConfig.externals,
-			react: 'react',
 			wp: 'wp',
 		},
 		optimization: {
-			...baseConfig.optimization,
 			splitChunks: false,
 		},
 		output: {
 			path: outputDir,
-			filename: '[name].js',
+			filename: `blocks-${ blockName }.js`,
 			libraryTarget: 'window',
-			library: `blocks-${ path.basename( path.dirname( entryPath ) ) }`,
+			library: `blocks-${ blockName }`,
+		},
+		module: {
+			...baseConfig.module,
+			rules: [
+				...baseConfig.module.rules,
+				{
+					test: /\.scss$/,
+					use: [
+						'style-loader',
+						'css-loader',
+						{
+							loader: 'sass-loader',
+							options: {
+								includePaths: [
+									path.join( __rootDir, 'assets', 'stylesheets' ),
+									path.join( __rootDir, 'assets', 'stylesheets', 'shared' ),
+									path.join( __rootDir, 'assets', 'stylesheets', 'shared', 'mixins' ),
+								],
+							},
+						},
+					],
+				},
+			],
 		},
 	},
 };
