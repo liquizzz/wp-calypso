@@ -3,7 +3,7 @@
 	"version": "0.1.0-alpha.5",
 	"description": "React components, as used on WordPress.com",
 	"scripts": {
-		"build": "npx babel --only ./index.js,./button/,./main/ --out-dir cjs .",
+		"build": "npx babel --only ./index.js,./badge/,./button/,./main/,./notice/ --out-dir cjs .",
 		"prepublishOnly": "npm run build"
 	},
 	"repository": {
@@ -26,11 +26,15 @@
 	"files": [
 		"index.js",
 		"cjs/",
+		"badge/",
 		"button/",
-		"main/"
+		"main/",
+		"notice"
 	],
 	"dependencies": {
 		"classnames": "^2.2.6",
+		"gridicons": "^3.0.1",
+		"i18n-calypso": "^1.9.1",
 		"lodash": "^4.17.10",
 		"prop-types": "^15.6.2",
 		"react": "^16.4.1"
