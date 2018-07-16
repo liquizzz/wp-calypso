@@ -3,19 +3,18 @@
 /**
  * External dependencies
  */
-
 import React, { Fragment } from 'react';
 import { overEvery as and } from 'lodash';
 
 /**
  * Internal dependencies
  */
-import { makeTour, Tour, Step } from 'layout/guided-tours/config-elements';
-import { isNewUser, isEnabled } from 'state/ui/guided-tours/contexts';
+import { makeTour, Tour, Step, ButtonRow, Quit } from 'layout/guided-tours/config-elements';
+import { isEnabled } from 'state/ui/guided-tours/contexts';
 import { isDesktop } from 'lib/viewport';
 import { getSelectedSite } from 'state/ui/selectors';
-import { abtest } from 'lib/abtest';
 import isSiteAutomatedTransfer from 'state/selectors/is-site-automated-transfer';
+import { abtest } from 'lib/abtest';
 
 const isAtomic = state => {
 	const selectedSite = getSelectedSite( state );
@@ -26,18 +25,14 @@ const isAtomic = state => {
 	return isSiteAutomatedTransfer( state, selectedSite.ID );
 };
 
-export const PluginsBasicTour = makeTour(
+const isABTesting = () => abtest( 'calypsoifyPlugins' ) === 'pointToWPAdmin';
+
+export const PluginsBasicsTour = makeTour(
 	<Tour
-		name="pluginsBasicTour"
-		version="20180628"
-		path="/plugins/"
-		when={ and(
-			isAtomic,
-			isNewUser,
-			isDesktop,
-			isEnabled( 'guided-tours/plugins-basic-tour' ),
-			abtest( 'calypsoifyPlugins' ) === 'pointToWPAdmin'
-		) }
+		name="pluginsBasicsTour"
+		version="20180718"
+		path={ [ '/stats', '/stats/day' ] }
+		when={ and( isAtomic, isDesktop, isEnabled( 'guided-tours/plugins-basic-tour' ), isABTesting ) }
 	>
 		<Step
 			name="init"
@@ -50,6 +45,9 @@ export const PluginsBasicTour = makeTour(
 			{ ( { translate } ) => (
 				<Fragment>
 					<p>{ translate( 'Manage plugin settings, and install more plugins here' ) }</p>
+					<ButtonRow>
+						<Quit primary>{ translate( 'Got it.' ) }</Quit>
+					</ButtonRow>
 				</Fragment>
 			) }
 		</Step>
