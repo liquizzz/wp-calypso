@@ -262,7 +262,7 @@
     "jest": "22.4.2",
     "jest-docblock": "22.0.3",
     "jest-junit-reporter": "1.1.0",
-    "lerna": "2.11.0",
+    "lerna": "3.0.0-beta.21",
     "md5-file": "4.0.0",
     "mixedindentlint": "1.2.0",
     "nock": "8.2.2",
