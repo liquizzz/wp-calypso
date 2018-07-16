@@ -60,6 +60,7 @@ import { makeLayout, render as clientRender } from 'controller';
 import NoSitesMessage from 'components/empty-content/no-sites-message';
 import EmptyContentComponent from 'components/empty-content';
 import DomainOnly from 'my-sites/domains/domain-management/list/domain-only';
+import { abtest } from 'lib/abtest';
 
 /*
  * @FIXME Shorthand, but I might get rid of this.
@@ -376,17 +377,19 @@ export function siteSelection( context, next ) {
 
 	const siteId = getSiteId( getState(), siteFragment );
 	if ( siteId ) {
+		dispatch( setSelectedSiteId( siteId ) );
+		const selectionComplete = onSelectedSiteAvailable( context );
+
 		const isAtomicSite = isSiteAutomatedTransfer( getState(), siteId );
-		if ( isAtomicSite && /^\/plugins/.test( basePath ) ) {
+		const calypsoify = isAtomicSite && abtest( 'calypsoifyPlugins' ) === 'pointToWPAdmin';
+
+		if ( calypsoify && /^\/plugins/.test( basePath ) ) {
 			if ( siteFragment ) {
 				return page.redirect( '/stats/day/' + siteFragment );
 			}
 
 			return page.redirect( allSitesPath );
 		}
-
-		dispatch( setSelectedSiteId( siteId ) );
-		const selectionComplete = onSelectedSiteAvailable( context );
 
 		// if there was a redirect, we should terminate processing of next routes
 		// and let the redirect proceed
