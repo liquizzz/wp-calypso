@@ -46,7 +46,6 @@ import isAutomatedTransferActive from 'state/selectors/is-automated-transfer-act
 import isSiteAutomatedTransfer from 'state/selectors/is-site-automated-transfer';
 import QueryEligibility from 'components/data/query-atat-eligibility';
 import { isATEnabled } from 'lib/automated-transfer';
-import { abtest } from 'lib/abtest';
 
 export class PluginMeta extends Component {
 	static OUT_OF_DATE_YEARS = 2;
@@ -566,11 +565,6 @@ export class PluginMeta extends Component {
 		const path =
 			( ! this.props.selectedSite || plugin.active ) && getExtensionSettingsPath( plugin );
 
-		const calypsoify =
-			this.props.isAtomicSite &&
-			abtest( 'calypsoifyPlugins' ) === 'pointToWPAdmin' &&
-			config.isEnabled( 'guided-tours/plugins-basic-tour' );
-
 		return (
 			<div className="plugin-meta">
 				{ this.props.atEnabled &&
@@ -586,7 +580,7 @@ export class PluginMeta extends Component {
 							{ this.renderName() }
 							<div className="plugin-meta__meta">{ this.renderAuthorUrl() }</div>
 						</div>
-						{ ! calypsoify && this.renderActions() }
+						{ ! this.props.calypsoify && this.renderActions() }
 					</div>
 				</Card>
 
@@ -610,6 +604,7 @@ export class PluginMeta extends Component {
 								this.props.selectedSite && this.props.selectedSite.options.software_version
 							}
 							hasUpdate={ this.getAvailableNewVersions().length > 0 }
+							calypsoify={ this.props.calypsoify }
 						/>
 					) }
 
