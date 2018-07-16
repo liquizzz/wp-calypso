@@ -17,7 +17,7 @@
     "> 1%"
   ],
   "dependencies": {
-    "@automattic/simple-components": "file:../client/components",
+    "@automattic/simple-components": "file:client/components",
     "@babel/cli": "7.0.0-beta.44",
     "@babel/core": "7.0.0-beta.44",
     "@babel/plugin-proposal-export-default-from": "7.0.0-beta.44",
