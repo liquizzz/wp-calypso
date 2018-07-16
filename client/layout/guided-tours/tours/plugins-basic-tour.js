@@ -31,7 +31,7 @@ export const PluginsBasicsTour = makeTour(
 	<Tour
 		name="pluginsBasicsTour"
 		version="20180718"
-		path={ [ '/stats', '/stats/day' ] }
+		path={ [ '/stats', '/plugins' ] }
 		when={ and( isAtomic, isDesktop, isEnabled( 'guided-tours/plugins-basic-tour' ), isABTesting ) }
 	>
 		<Step
