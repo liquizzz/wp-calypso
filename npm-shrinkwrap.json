@@ -7,38 +7,10 @@
     "@automattic/simple-components": {
       "version": "file:client/components",
       "requires": {
-        "classnames": "2.2.6",
-        "lodash": "4.17.10",
-        "prop-types": "15.6.2",
-        "react": "16.4.1"
-      },
-      "dependencies": {
-        "classnames": {
-          "version": "2.2.6",
-          "bundled": true
-        },
-        "lodash": {
-          "version": "4.17.10",
-          "bundled": true
-        },
-        "prop-types": {
-          "version": "15.6.2",
-          "bundled": true,
-          "requires": {
-            "loose-envify": "^1.3.1",
-            "object-assign": "^4.1.1"
-          }
-        },
-        "react": {
-          "version": "16.4.1",
-          "bundled": true,
-          "requires": {
-            "fbjs": "^0.8.16",
-            "loose-envify": "^1.1.0",
-            "object-assign": "^4.1.1",
-            "prop-types": "^15.6.0"
-          }
-        }
+        "classnames": "^2.2.6",
+        "lodash": "^4.17.10",
+        "prop-types": "^15.6.2",
+        "react": "^16.4.1"
       }
     },
     "@babel/cli": {
