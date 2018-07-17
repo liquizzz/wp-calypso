@@ -11,7 +11,14 @@ import page from 'page';
  */
 import { WordAdsUpsellComponent, PluginsUpsellComponent, StoreUpsellComponent } from './main';
 import { getSiteFragment } from 'lib/route';
-import { canCurrentUserUseStore, canCurrentUserUseAds } from 'state/sites/selectors';
+import {
+	canCurrentUserUseStore,
+	canCurrentUserUseAds,
+	canAdsBeEnabledOnCurrentSite,
+	canCurrentUserUpgradeSite,
+} from 'state/sites/selectors';
+import canCurrentUser from 'state/selectors/can-current-user';
+import { getSelectedSiteId } from 'state/ui/selectors';
 
 export default {
 	storeUpsell: function( context, next ) {
@@ -46,8 +53,23 @@ export default {
 			return page.redirect( '/feature/ads' );
 		}
 
-		if ( canCurrentUserUseAds( context.store.getState() ) ) {
-			return page.redirect( '/ads/earnings' + siteFragment );
+		const state = context.store.getState();
+		if ( ! canCurrentUserUpgradeSite( state ) ) {
+			return page.redirect( '/stats/' + siteFragment );
+		}
+
+		const siteId = getSelectedSiteId( state );
+		const canUserManageOptions = canCurrentUser( state, siteId, 'manage_options' );
+		if ( ! canUserManageOptions ) {
+			return page.redirect( '/stats/' + siteFragment );
+		}
+
+		if ( canCurrentUserUseAds( state ) ) {
+			return page.redirect( '/ads/earnings/' + siteFragment );
+		}
+
+		if ( canAdsBeEnabledOnCurrentSite( state ) ) {
+			return page.redirect( '/ads/settings/' + siteFragment );
 		}
 
 		// Render
