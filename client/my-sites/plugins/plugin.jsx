@@ -40,6 +40,7 @@ import NonSupportedJetpackVersionNotice from './not-supported-jetpack-version';
 import NoPermissionsError from './no-permissions-error';
 import { abtest } from 'lib/abtest';
 import { requestGuidedTour } from 'state/ui/guided-tours/actions';
+import { getToursHistory } from 'state/ui/guided-tours/selectors';
 
 const SinglePlugin = createReactClass( {
 	displayName: 'SinglePlugin',
@@ -373,7 +374,12 @@ const SinglePlugin = createReactClass( {
 			this.props.isAtomicSite && abtest( 'calypsoifyPlugins' ) === 'pointToWPAdmin';
 
 		if ( calypsoify && this.isPluginInstalledOnsite() ) {
-			requestTour( 'pluginsBasicsTour' );
+			const pluginsToursSeen = this.props.toursHistory.filter(
+				tour => tour.tourName === 'pluginsBasicsTour'
+			);
+			if ( pluginsToursSeen.length < 3 ) {
+				requestTour( 'pluginsBasicsTour' );
+			}
 		}
 
 		return (
@@ -422,6 +428,7 @@ export default connect(
 				? canCurrentUser( state, selectedSiteId, 'manage_options' )
 				: canCurrentUserManagePlugins( state ),
 			sites: getSelectedOrAllSitesWithPlugins( state ),
+			toursHistory: getToursHistory( state ),
 		};
 	},
 	{
